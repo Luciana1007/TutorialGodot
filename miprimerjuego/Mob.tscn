@@ -54,7 +54,7 @@ gravity_scale = 0.0
 script = ExtResource("1_ejbti")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." groups=["mobs"]]
 scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_6v40e")
 animation = &"fly"
