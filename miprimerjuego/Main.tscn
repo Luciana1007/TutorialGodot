@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://brs60sdqxxa2"]
+[gd_scene load_steps=8 format=3 uid="uid://brs60sdqxxa2"]
 
 [ext_resource type="PackedScene" uid="uid://bdkqerei55xj8" path="res://player.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://c2aqk2kp60jnw" path="res://main.gd" id="1_r0du0"]
 [ext_resource type="PackedScene" uid="uid://5u1ypnb0duhn" path="res://Mob.tscn" id="2_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dfl1swtsy6gtf" path="res://HUD.tscn" id="4_cm0pq"]
+[ext_resource type="AudioStream" uid="uid://cf7yt5ua22uc8" path="res://art/House In a Forest Loop.ogg" id="5_3dxm6"]
+[ext_resource type="AudioStream" uid="uid://d4jxvkjgjtnff" path="res://art/gameover.wav" id="6_lgr22"]
 
 [sub_resource type="Curve2D" id="Curve2D_glv2v"]
 _data = {
@@ -11,33 +13,48 @@ _data = {
 }
 point_count = 5
 
-[node name="Main" type="Node2D"]
+[node name="ColorRect" type="ColorRect"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.799961, 0.577996, 0.986343, 1)
+
+[node name="Main" type="Node2D" parent="."]
 script = ExtResource("1_r0du0")
 mob_scene = ExtResource("2_cm0pq")
 
-[node name="Player" parent="." instance=ExtResource("1_glv2v")]
+[node name="Player" parent="Main" instance=ExtResource("1_glv2v")]
 
-[node name="MobTimer" type="Timer" parent="."]
+[node name="MobTimer" type="Timer" parent="Main"]
 wait_time = 0.5
 
-[node name="ScoreTimer" type="Timer" parent="."]
+[node name="ScoreTimer" type="Timer" parent="Main"]
 
-[node name="StartTimer" type="Timer" parent="."]
+[node name="StartTimer" type="Timer" parent="Main"]
 wait_time = 2.0
 one_shot = true
 
-[node name="StartPosition" type="Marker2D" parent="."]
+[node name="StartPosition" type="Marker2D" parent="Main"]
 position = Vector2(240, 250)
 
-[node name="MobPath" type="Path2D" parent="."]
+[node name="MobPath" type="Path2D" parent="Main"]
 curve = SubResource("Curve2D_glv2v")
 
-[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+[node name="MobSpawnLocation" type="PathFollow2D" parent="Main/MobPath"]
 
-[node name="HUD" parent="." instance=ExtResource("4_cm0pq")]
+[node name="HUD" parent="Main" instance=ExtResource("4_cm0pq")]
 
-[connection signal="hit" from="Player" to="." method="game_over"]
-[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
-[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
-[connection signal="start_game" from="HUD" to="." method="new_game"]
+[node name="Music" type="AudioStreamPlayer" parent="Main"]
+stream = ExtResource("5_3dxm6")
+parameters/looping = true
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="Main"]
+stream = ExtResource("6_lgr22")
+
+[connection signal="hit" from="Main/Player" to="Main" method="game_over"]
+[connection signal="timeout" from="Main/MobTimer" to="Main" method="_on_mob_timer_timeout"]
+[connection signal="timeout" from="Main/ScoreTimer" to="Main" method="_on_score_timer_timeout"]
+[connection signal="timeout" from="Main/StartTimer" to="Main" method="_on_start_timer_timeout"]
+[connection signal="start_game" from="Main/HUD" to="Main" method="new_game"]
